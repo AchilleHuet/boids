@@ -1,17 +1,13 @@
 import numpy as np
 import pygame
 
-from pygame.sprite import Sprite
-from pygame.math import Vector2
-from pygame import Surface
-
 from utilities import rotation2D
 
 BLUE = (0, 0, 255)
 SPEED = 4
 SCREEN = np.array([[1280], [720]])
 
-class Boid(Sprite):
+class Boid():
 
     def __init__(self, x, y, angle, delta_angle):
         super().__init__()
