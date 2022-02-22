@@ -3,14 +3,9 @@ import pygame
 
 from utilities import rotation2D, get_distance
 
-BLUE = (0, 0, 255)
-SPEED = 4
+from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RADIUS
 
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
 SCREEN = np.array([[WINDOW_WIDTH], [WINDOW_HEIGHT]])
-
-RADIUS = 100
 
 class Boid():
 
