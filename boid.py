@@ -80,9 +80,6 @@ class Boid():
             dist = get_distance(self.pos, other.pos)
             if dist > 0:
                 direction += (self.pos - other.pos) / dist**2
-        # norm = np.linalg.norm(direction)
-        # if norm > 0:
-        #     direction /= norm
         return direction
 
     def avoidance(self):

@@ -7,6 +7,5 @@ APP_NAME = "Boids"
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 
-NUM_BOIDS = 30
 RADIUS = 50
 SPEED = 4
