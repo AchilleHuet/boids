@@ -2,7 +2,7 @@ from random import random
 
 from boid import Boid
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS
-from utilities import get_distance
+from utilities import get_all_distances, get_distance_from_matrix
 
 class Simulation():
     """Handle the global behavior of boids for each step"""
@@ -21,10 +21,11 @@ class Simulation():
 
     def step(self):
         """Compute and update boids for the current timestep"""
-        for boid in self.boids:
+        distances = get_all_distances(self.boids)
+        for i, boid in enumerate(self.boids):
             neighbors = []
-            for neighbor in self.boids:
-                dist = get_distance(boid.pos, neighbor.pos)
+            for j, neighbor in enumerate(self.boids):
+                dist = get_distance_from_matrix(distances, i, j)
                 if dist < RADIUS and neighbors is not boid:
                     neighbors.append(neighbor)
             boid.update(neighbors)
