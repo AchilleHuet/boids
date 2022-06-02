@@ -26,7 +26,7 @@ class Simulation:
 
     def step(self):
         """Compute and update boids for the current timestep"""
-        distances = get_all_distances(self.boids)
+        distances = get_all_distances(Boid.boid_positions)
         for i, boid in enumerate(self.boids):
             neighbors = []
             for j, neighbor in enumerate(self.boids):

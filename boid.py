@@ -1,8 +1,9 @@
 import numpy as np
 import pygame
+import itertools
 
 from utilities import rotation_2d, get_distance
-from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RADIUS
+from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RADIUS, NUM_BOIDS
 
 SCREEN_DIMENSIONS = np.array([[WINDOW_WIDTH], [WINDOW_HEIGHT]])
 
@@ -10,14 +11,25 @@ SCREEN_DIMENSIONS = np.array([[WINDOW_WIDTH], [WINDOW_HEIGHT]])
 class Boid:
     """Represent and define boid behavior"""
 
+    boid_count = itertools.count()
+    boid_positions = np.zeros((NUM_BOIDS, 2, 1))
+
     def __init__(self, x, y, angle):
+        self._id = next(self.boid_count)
+
         self.size = 10
 
-        self.pos = np.array([[x], [y]]).astype(float)
+        self.set_pos(np.array([[x], [y]]).astype(float))
         self.vel = np.array([[np.cos(angle)], [np.sin(angle)]]) * SPEED
         self.angle = angle
         self.acc = 0
 
+    @property
+    def pos(self):
+        return self.boid_positions[self._id]
+
+    def set_pos(self, pos):
+        self.boid_positions[self._id] = pos
 
     def update(self, neighbors):
         """Use position of nearby boids to update direction, acceleration and speed of boid"""
@@ -31,8 +43,8 @@ class Boid:
         self.vel += self.acc
         self.vel = self.vel / np.linalg.norm(self.vel) * SPEED
 
-        self.pos += self.vel
-        self.pos = np.mod(self.pos, SCREEN_DIMENSIONS)
+        self.set_pos(self.pos + self.vel)
+        self.set_pos(np.mod(self.pos, SCREEN_DIMENSIONS))
 
         # update image angle
         self.angle = np.arctan2(self.vel[1], self.vel[0])
