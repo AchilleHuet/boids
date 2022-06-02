@@ -1,6 +1,6 @@
 import pygame
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, APP_NAME, BLACK
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, APP_NAME, BLACK, NUM_BOIDS
 from simulation import Simulation
 
 pygame.init()
@@ -8,7 +8,7 @@ pygame.init()
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption(APP_NAME)
 
-simulation = Simulation(screen, num_boids=30)
+simulation = Simulation(screen, num_boids=NUM_BOIDS)
 simulation.start()
 
 # Main Loop

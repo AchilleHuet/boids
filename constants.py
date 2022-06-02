@@ -9,3 +9,5 @@ BLUE = (0, 0, 255)
 
 RADIUS = 50
 SPEED = 4
+
+NUM_BOIDS = 200
