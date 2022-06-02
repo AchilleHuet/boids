@@ -4,7 +4,8 @@ from boid import Boid
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS
 from utilities import get_all_distances, get_distance_from_matrix
 
-class Simulation():
+
+class Simulation:
     """Handle the global behavior of boids for each step"""
 
     def __init__(self, screen, num_boids):
@@ -15,7 +16,11 @@ class Simulation():
     def start(self):
         """Instantiate new boids randomly"""
         for _ in range(self.num_boids):
-            x, y, angle = WINDOW_WIDTH*random(), WINDOW_HEIGHT*random(), 6.28*random()
+            x, y, angle = (
+                WINDOW_WIDTH * random(),
+                WINDOW_HEIGHT * random(),
+                6.28 * random(),
+            )
             new_boid = Boid(x, y, angle)
             self.boids.append(new_boid)
 

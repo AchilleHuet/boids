@@ -6,7 +6,8 @@ from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RADIUS
 
 SCREEN_DIMENSIONS = np.array([[WINDOW_WIDTH], [WINDOW_HEIGHT]])
 
-class Boid():
+
+class Boid:
     """Represent and define boid behavior"""
 
     def __init__(self, x, y, angle):
@@ -36,14 +37,13 @@ class Boid():
         # update image angle
         self.angle = np.arctan2(self.vel[1], self.vel[0])
 
-
     def draw(self, screen):
         """Draw the boid on the given screen"""
         # create default points for a triangle-shaped boid
         points = np.zeros((3, 2, 1))
-        points[0] = np.array([[self.size],[0]])
-        points[1] = np.array([[-self.size//2],[self.size//2]])
-        points[2] = np.array([[-self.size//2],[-self.size//2]])
+        points[0] = np.array([[self.size], [0]])
+        points[1] = np.array([[-self.size // 2], [self.size // 2]])
+        points[2] = np.array([[-self.size // 2], [-self.size // 2]])
 
         # rotate and translate points to their correct coordinates
         rotated = rotation_2d(self.angle) @ points
@@ -55,7 +55,7 @@ class Boid():
 
     def cohesion(self, neighbors):
         """Find the average direction to nearby boids"""
-        direction = np.array([[0.], [0.]])
+        direction = np.array([[0.0], [0.0]])
         for other in neighbors:
             direction += other.pos - self.pos
         norm = np.linalg.norm(direction)
@@ -65,7 +65,7 @@ class Boid():
 
     def alignment(self, neighbors):
         """Find the average direction which nearby boids are facing"""
-        direction = np.array([[0.], [0.]])
+        direction = np.array([[0.0], [0.0]])
         for other in neighbors:
             direction += other.vel
         norm = np.linalg.norm(direction)
@@ -75,7 +75,7 @@ class Boid():
 
     def separation(self, neighbors):
         """Give direction and magnitude of repulsion due to being close to nearby boids"""
-        direction = np.array([[0.], [0.]])
+        direction = np.array([[0.0], [0.0]])
         for other in neighbors:
             dist = get_distance(self.pos, other.pos)
             if dist > 0:
@@ -91,10 +91,26 @@ class Boid():
         dist_bot = (SCREEN_DIMENSIONS - self.pos)[1][0]
 
         # calculate
-        dir_left = np.array([[-1], [0]]) / dist_right if dist_right < RADIUS else np.array([[0], [0]])
-        dir_right = np.array([[1], [0]]) / dist_left if dist_left < RADIUS else np.array([[0], [0]])
-        dir_top = np.array([[0], [-1]]) / dist_bot if dist_bot < RADIUS else np.array([[0], [0]])
-        dir_bot = np.array([[0], [1]]) / dist_top if dist_top < RADIUS else np.array([[0], [0]])
+        dir_left = (
+            np.array([[-1], [0]]) / dist_right
+            if dist_right < RADIUS
+            else np.array([[0], [0]])
+        )
+        dir_right = (
+            np.array([[1], [0]]) / dist_left
+            if dist_left < RADIUS
+            else np.array([[0], [0]])
+        )
+        dir_top = (
+            np.array([[0], [-1]]) / dist_bot
+            if dist_bot < RADIUS
+            else np.array([[0], [0]])
+        )
+        dir_bottom = (
+            np.array([[0], [1]]) / dist_top
+            if dist_top < RADIUS
+            else np.array([[0], [0]])
+        )
 
-        direction = dir_left + dir_right + dir_top + dir_bot
+        direction = dir_left + dir_right + dir_top + dir_bottom
         return direction

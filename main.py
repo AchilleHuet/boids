@@ -22,7 +22,7 @@ while RUN:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             RUN = False
-    
+
     simulation.step()
 
     pygame.display.flip()
