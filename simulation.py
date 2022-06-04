@@ -1,4 +1,5 @@
 from random import random
+import numpy as np
 
 from boid import Boid
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS
@@ -28,10 +29,7 @@ class Simulation:
         """Compute and update boids for the current timestep"""
         distances = get_all_distances(Boid.boid_positions)
         for i, boid in enumerate(self.boids):
-            neighbors = []
-            for j, neighbor in enumerate(self.boids):
-                dist = get_distance_from_matrix(distances, i, j)
-                if dist < RADIUS and neighbors is not boid:
-                    neighbors.append(neighbor)
+            neighbor_indices = np.where(distances[i] < RADIUS)[0]
+            neighbors = [self.boids[j] for j in neighbor_indices if j != i]
             boid.update(neighbors)
             boid.draw(self.screen)
