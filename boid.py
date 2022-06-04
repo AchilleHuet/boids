@@ -31,11 +31,11 @@ class Boid:
     def set_pos(self, pos):
         self.boid_positions[self._id] = pos
 
-    def update(self, neighbors):
+    def update(self, neighbors, neighbor_ids):
         """Use position of nearby boids to update direction, acceleration and speed of boid"""
         # update position
         self.acc = (
-            self.cohesion(neighbors) * 0.5
+            self.cohesion(neighbor_ids) * 0.5
             + self.alignment(neighbors) * 0.5
             + self.separation(neighbors) * 5
             + self.avoidance() * 10
@@ -65,11 +65,10 @@ class Boid:
         new_points = [(*point[0], *point[1]) for point in rotated.tolist()]
         pygame.draw.polygon(screen, BLUE, new_points)
 
-    def cohesion(self, neighbors):
+    def cohesion(self, neighbor_ids):
         """Find the average direction to nearby boids"""
-        direction = np.array([[0.0], [0.0]])
-        for other in neighbors:
-            direction += other.pos - self.pos
+        neighbor_positions = self.boid_positions[neighbor_ids]
+        direction = sum(neighbor_positions - self.pos)
         norm = np.linalg.norm(direction)
         if norm > 0:
             direction /= norm

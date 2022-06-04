@@ -3,7 +3,7 @@ import numpy as np
 
 from boid import Boid
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS
-from utilities import get_all_distances, get_distance_from_matrix
+from utilities import get_all_distances
 
 
 class Simulation:
@@ -31,5 +31,5 @@ class Simulation:
         for i, boid in enumerate(self.boids):
             neighbor_indices = np.where(distances[i] < RADIUS)[0]
             neighbors = [self.boids[j] for j in neighbor_indices if j != i]
-            boid.update(neighbors)
+            boid.update(neighbors, neighbor_indices)
             boid.draw(self.screen)
