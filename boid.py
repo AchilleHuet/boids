@@ -13,6 +13,7 @@ class Boid:
 
     boid_count = itertools.count()
     boid_positions = np.zeros((NUM_BOIDS, 2, 1))
+    boid_velocities = np.zeros((NUM_BOIDS, 2, 1))
 
     def __init__(self, x, y, angle):
         self._id = next(self.boid_count)
@@ -20,7 +21,7 @@ class Boid:
         self.size = 10
 
         self.set_pos(np.array([[x], [y]]).astype(float))
-        self.vel = np.array([[np.cos(angle)], [np.sin(angle)]]) * SPEED
+        self.set_vel(np.array([[np.cos(angle)], [np.sin(angle)]]) * SPEED)
         self.angle = angle
         self.acc = 0
 
@@ -31,6 +32,13 @@ class Boid:
     def set_pos(self, pos):
         self.boid_positions[self._id] = pos
 
+    @property
+    def vel(self):
+        return self.boid_velocities[self._id]
+
+    def set_vel(self, vel):
+        self.boid_velocities[self._id] = vel
+
     def update(self, neighbors, neighbor_ids):
         """Use position of nearby boids to update direction, acceleration and speed of boid"""
         # update position
@@ -40,8 +48,8 @@ class Boid:
             + self.separation(neighbors) * 5
             + self.avoidance() * 10
         )
-        self.vel += self.acc
-        self.vel = self.vel / np.linalg.norm(self.vel) * SPEED
+        self.set_vel(self.vel + self.acc)
+        self.set_vel(self.vel / np.linalg.norm(self.vel) * SPEED)
 
         self.set_pos(self.pos + self.vel)
         self.set_pos(np.mod(self.pos, SCREEN_DIMENSIONS))
