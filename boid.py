@@ -44,7 +44,7 @@ class Boid:
         # update position
         self.acc = (
             self.cohesion(neighbor_ids) * 0.5
-            + self.alignment(neighbors) * 0.5
+            + self.alignment(neighbor_ids) * 0.5
             + self.separation(neighbors) * 5
             + self.avoidance() * 10
         )
@@ -82,11 +82,10 @@ class Boid:
             direction /= norm
         return direction
 
-    def alignment(self, neighbors):
+    def alignment(self, neighbor_ids):
         """Find the average direction which nearby boids are facing"""
-        direction = np.array([[0.0], [0.0]])
-        for other in neighbors:
-            direction += other.vel
+        neighbor_velocities = self.boid_velocities[neighbor_ids]
+        direction = sum(neighbor_velocities)
         norm = np.linalg.norm(direction)
         if norm > 0:
             direction /= norm
