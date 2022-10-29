@@ -3,7 +3,7 @@ import numpy as np
 
 from boid import Boid
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS
-from utilities import get_all_distances
+from utilities import get_all_distances, get_distance_from_matrix
 
 
 class Simulation:
@@ -29,7 +29,7 @@ class Simulation:
         """Compute and update boids for the current timestep"""
         distances = get_all_distances(Boid.boid_positions)
         for i, boid in enumerate(self.boids):
-            neighbor_indices = np.where(distances[i] < RADIUS)[0]
-            neighbors = [self.boids[j] for j in neighbor_indices if j != i]
-            boid.update(neighbors, neighbor_indices)
+            neighbor_ids = np.where((0 < distances[i]) * (distances[i] < RADIUS))[0]
+            neighbor_distances = get_distance_from_matrix(distances, neighbor_ids, i)
+            boid.update(neighbor_ids, neighbor_distances)
             boid.draw(self.screen)

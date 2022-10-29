@@ -39,13 +39,13 @@ class Boid:
     def set_vel(self, vel):
         self.boid_velocities[self._id] = vel
 
-    def update(self, neighbors, neighbor_ids):
+    def update(self, neighbor_ids, neighbor_distances):
         """Use position of nearby boids to update direction, acceleration and speed of boid"""
         # update position
         self.acc = (
             self.cohesion(neighbor_ids) * 0.5
             + self.alignment(neighbor_ids) * 0.5
-            + self.separation(neighbors) * 5
+            + self.separation(neighbor_ids, neighbor_distances) * 5
             + self.avoidance() * 10
         )
         self.set_vel(self.vel + self.acc)
@@ -91,13 +91,17 @@ class Boid:
             direction /= norm
         return direction
 
-    def separation(self, neighbors):
-        """Give direction and magnitude of repulsion due to being close to nearby boids"""
-        direction = np.array([[0.0], [0.0]])
-        for other in neighbors:
-            dist = get_distance(self.pos, other.pos)
-            if dist > 0:
-                direction += (self.pos - other.pos) / dist**2
+    def separation(self, neighbor_ids, neighbor_distances):
+        """Give direction and magnitude of repulsion due to being close to nearby boids.
+        Each neighbor pushes back the boid with a strength that is inversely proportional
+        to the distance between the two."""
+        if len(neighbor_ids) == 0:
+            return np.array([[0.0], [0.0]])
+        neighbor_positions = self.boid_positions[neighbor_ids]
+        direction = np.sum(
+            (self.pos - neighbor_positions) / neighbor_distances.reshape(-1, 1, 1) ** 2,
+            axis=0,
+        )
         return direction
 
     def avoidance(self):
