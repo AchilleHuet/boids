@@ -19,6 +19,7 @@ class Boid:
         self._id = next(self.boid_count)
 
         self.size = 10
+        self.shape = self.get_default_shape()
 
         self.set_pos(np.array([[x], [y]]).astype(float))
         self.set_vel(np.array([[np.cos(angle)], [np.sin(angle)]]) * SPEED)
@@ -60,17 +61,18 @@ class Boid:
         # update image angle
         self.angle = np.arctan2(self.vel[1], self.vel[0])
 
-    def draw(self, screen):
-        """Draw the boid on the given screen"""
-        # create default points for a triangle-shaped boid
+    def get_default_shape(self):
+        """create default points for a triangle-shaped boid"""
         points = np.zeros((3, 2, 1))
         points[0] = np.array([[self.size], [0]])
         points[1] = np.array([[-self.size // 2], [self.size // 2]])
         points[2] = np.array([[-self.size // 2], [-self.size // 2]])
+        return points
 
+    def draw(self, screen):
+        """Draw the boid on the given screen"""
         # rotate and translate points to their correct coordinates
-        rotated = rotation_2d(self.angle) @ points
-        rotated = rotated + self.pos
+        rotated = rotation_2d(self.angle) @ self.shape + self.pos
 
         # extract (x, y) coordinates and draw shape
         new_points = [(*point[0], *point[1]) for point in rotated.tolist()]
