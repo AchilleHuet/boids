@@ -40,11 +40,11 @@ class Boid:
     def set_vel(self, vel):
         self.boid_velocities[self._id] = vel
 
-    def update(self, neighbor_ids, neighbor_distances):
+    def update(self, neighbor_ids, neighbor_distances, follow_pointer):
         """Use position of nearby boids to update direction, acceleration and speed of boid"""
         # update position
         self.acc = (
-            self.cohesion(neighbor_ids) * 0.5
+            self.cohesion(neighbor_ids, follow_pointer) * 0.5
             + self.alignment(neighbor_ids) * 0.5
             + self.separation(neighbor_ids, neighbor_distances) * 5
             + self.avoidance() * 10
@@ -77,10 +77,17 @@ class Boid:
         new_points = [(*point[0], *point[1]) for point in rotated.tolist()]
         pygame.draw.polygon(screen, BLUE, new_points)
 
-    def cohesion(self, neighbor_ids):
+    def cohesion(self, neighbor_ids, follow_pointer):
         """Find the average direction to nearby boids"""
         neighbor_positions = self.boid_positions[neighbor_ids]
         direction = sum(neighbor_positions - self.pos)
+
+        if follow_pointer:
+            pointer_x, pointer_y = pygame.mouse.get_pos()
+            pointer_pos = np.array([[pointer_x], [pointer_y]])
+            if get_distance(pointer_pos, self.pos) < RADIUS * 5:
+                direction += (pointer_pos - self.pos) * 1000
+
         norm = np.linalg.norm(direction)
         if norm > 0:
             direction /= norm

@@ -3,7 +3,9 @@ import numpy as np
 
 from boid import Boid
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS
-from utilities import get_all_distances, get_distance_from_matrix
+from utilities import get_all_distances, get_distance_from_matrix, clamp_positions
+
+follow_pointer = True
 
 
 class Simulation:
@@ -31,7 +33,7 @@ class Simulation:
         for i, boid in enumerate(self.boids):
             neighbor_ids = np.where((0 < distances[i]) * (distances[i] < RADIUS))[0]
             neighbor_distances = get_distance_from_matrix(distances, neighbor_ids, i)
-            boid.update(neighbor_ids, neighbor_distances)
+            boid.update(neighbor_ids, neighbor_distances, follow_pointer)
             boid.draw(self.screen)
 
         # keep boids from going out of bounds
