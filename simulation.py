@@ -5,7 +5,7 @@ from boid import Boid
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS
 from utilities import get_all_distances, get_distance_from_matrix, clamp_positions
 
-follow_pointer = True
+follow_pointer = False
 
 
 class Simulation:
