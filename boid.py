@@ -48,9 +48,12 @@ class Boid:
             + self.separation(neighbor_ids, neighbor_distances) * 5
             + self.avoidance() * 10
         )
+
+        # update velocity with acceleration and normalize
         self.set_vel(self.vel + self.acc)
         self.set_vel(self.vel / np.linalg.norm(self.vel) * SPEED)
 
+        # update position with velocity
         self.set_pos(self.pos + self.vel)
         self.set_pos(np.mod(self.pos, SCREEN_DIMENSIONS))
 
