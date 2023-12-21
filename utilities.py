@@ -29,3 +29,9 @@ def get_all_distances(boid_positions):
     """
     z = np.array([[complex(x, y) for [x], [y] in boid_positions]])
     return abs(z.T - z)
+
+
+def clamp_positions(positions, x_min, x_max, y_min, y_max):
+    return np.clip(
+        positions, np.array([[x_min], [y_min]]), np.array([[x_max], [y_max]])
+    )

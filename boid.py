@@ -56,7 +56,6 @@ class Boid:
 
         # update position with velocity
         self.set_pos(self.pos + self.vel)
-        self.set_pos(np.mod(self.pos, SCREEN_DIMENSIONS))
 
         # update image angle
         self.angle = np.arctan2(self.vel[1], self.vel[0])

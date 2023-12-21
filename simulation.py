@@ -33,3 +33,8 @@ class Simulation:
             neighbor_distances = get_distance_from_matrix(distances, neighbor_ids, i)
             boid.update(neighbor_ids, neighbor_distances)
             boid.draw(self.screen)
+
+        # keep boids from going out of bounds
+        Boid.boid_positions = clamp_positions(
+            Boid.boid_positions, 1, WINDOW_WIDTH - 1, 1, WINDOW_HEIGHT - 1
+        )
