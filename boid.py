@@ -3,7 +3,8 @@ import pygame
 import itertools
 
 from utilities import rotation_2d, get_distance
-from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RADIUS, RED, NUM_BOIDS
+from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS, NUM_BOIDS
+from species import Species
 
 SCREEN_DIMENSIONS = np.array([[WINDOW_WIDTH], [WINDOW_HEIGHT]])
 
@@ -17,15 +18,16 @@ class Boid:
 
     def __init__(self, x, y, angle):
         self._id = next(self.boid_count)
+        self.species = Species.get_species(self._id)
 
         self.size = 10
         self.shape = self.get_default_shape()
+        self.color = self.species.color
 
         self.set_pos(np.array([[x], [y]]).astype(float))
         self.set_vel(np.array([[np.cos(angle)], [np.sin(angle)]]) * SPEED)
         self.angle = angle
         self.acc = 0
-        self.color = BLUE if self._id < 100 else RED
 
     @property
     def pos(self):
@@ -42,17 +44,13 @@ class Boid:
         self.boid_velocities[self._id] = vel
 
     def update(
-        self,
-        neighbor_ids,
-        neighbord_ids_of_same_species,
-        neighbor_distances,
-        follow_pointer,
+        self, neighbor_ids, species_neighbor_ids, neighbor_distances, follow_pointer
     ):
         """Use position of nearby boids to update direction, acceleration and speed of boid"""
         # update position
         self.acc = (
-            self.cohesion(neighbord_ids_of_same_species, follow_pointer) * 0.5
-            + self.alignment(neighbord_ids_of_same_species) * 0.5
+            self.cohesion(species_neighbor_ids, follow_pointer) * 0.5
+            + self.alignment(species_neighbor_ids) * 0.5
             + self.separation(neighbor_ids, neighbor_distances) * 5
             + self.avoidance() * 10
         )
@@ -87,11 +85,6 @@ class Boid:
     def cohesion(self, neighbor_ids, follow_pointer):
         """Find the average direction to nearby boids"""
         neighbor_positions = self.boid_positions[neighbor_ids]
-        # if len(neighbor_positions) > 0:
-        #     print("pos", self.pos)
-        #     print(self._id)
-        #     print(neighbor_positions)
-        #     1 / 0
         direction = sum(neighbor_positions - self.pos)
 
         if follow_pointer:
