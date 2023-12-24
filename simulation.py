@@ -32,8 +32,18 @@ class Simulation:
         distances = get_all_distances(Boid.boid_positions)
         for i, boid in enumerate(self.boids):
             neighbor_ids = np.where((0 < distances[i]) * (distances[i] < RADIUS))[0]
+            neighbord_ids_of_same_species = [
+                boid_id
+                for boid_id in neighbor_ids
+                if ((i // 100) * 100 < boid_id) * (boid_id < (i // 100 + 1) * 100)
+            ]
             neighbor_distances = get_distance_from_matrix(distances, neighbor_ids, i)
-            boid.update(neighbor_ids, neighbor_distances, follow_pointer)
+            boid.update(
+                neighbor_ids,
+                neighbord_ids_of_same_species,
+                neighbor_distances,
+                follow_pointer,
+            )
             boid.draw(self.screen)
 
         # keep boids from going out of bounds

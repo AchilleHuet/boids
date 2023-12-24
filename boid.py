@@ -3,7 +3,7 @@ import pygame
 import itertools
 
 from utilities import rotation_2d, get_distance
-from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RADIUS, NUM_BOIDS
+from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RADIUS, RED, NUM_BOIDS
 
 SCREEN_DIMENSIONS = np.array([[WINDOW_WIDTH], [WINDOW_HEIGHT]])
 
@@ -25,6 +25,7 @@ class Boid:
         self.set_vel(np.array([[np.cos(angle)], [np.sin(angle)]]) * SPEED)
         self.angle = angle
         self.acc = 0
+        self.color = BLUE if self._id < 100 else RED
 
     @property
     def pos(self):
@@ -40,12 +41,18 @@ class Boid:
     def set_vel(self, vel):
         self.boid_velocities[self._id] = vel
 
-    def update(self, neighbor_ids, neighbor_distances, follow_pointer):
+    def update(
+        self,
+        neighbor_ids,
+        neighbord_ids_of_same_species,
+        neighbor_distances,
+        follow_pointer,
+    ):
         """Use position of nearby boids to update direction, acceleration and speed of boid"""
         # update position
         self.acc = (
-            self.cohesion(neighbor_ids, follow_pointer) * 0.5
-            + self.alignment(neighbor_ids) * 0.5
+            self.cohesion(neighbord_ids_of_same_species, follow_pointer) * 0.5
+            + self.alignment(neighbord_ids_of_same_species) * 0.5
             + self.separation(neighbor_ids, neighbor_distances) * 5
             + self.avoidance() * 10
         )
@@ -75,11 +82,16 @@ class Boid:
 
         # extract (x, y) coordinates and draw shape
         new_points = [(*point[0], *point[1]) for point in rotated.tolist()]
-        pygame.draw.polygon(screen, BLUE, new_points)
+        pygame.draw.polygon(screen, self.color, new_points)
 
     def cohesion(self, neighbor_ids, follow_pointer):
         """Find the average direction to nearby boids"""
         neighbor_positions = self.boid_positions[neighbor_ids]
+        # if len(neighbor_positions) > 0:
+        #     print("pos", self.pos)
+        #     print(self._id)
+        #     print(neighbor_positions)
+        #     1 / 0
         direction = sum(neighbor_positions - self.pos)
 
         if follow_pointer:
