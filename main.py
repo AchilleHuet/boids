@@ -1,6 +1,6 @@
 import pygame
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, APP_NAME, BLACK, NUM_BOIDS
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, APP_NAME, BLACK
 from simulation import Simulation
 
 pygame.init()
@@ -8,14 +8,14 @@ pygame.init()
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption(APP_NAME)
 
-simulation = Simulation(screen, num_boids=NUM_BOIDS)
+simulation = Simulation(screen)
 simulation.start()
 
 # Main Loop
 clock = pygame.time.Clock()
 RUN = True
-while RUN:
 
+while RUN:
     clock.tick(FPS)
     screen.fill(BLACK)
 

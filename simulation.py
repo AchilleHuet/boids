@@ -3,22 +3,24 @@ import numpy as np
 
 from boid import Boid
 from species import Species
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS, BLUE, RED
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS, BLUE, RED, GREEN
 from utilities import get_all_distances, get_distance_from_matrix, clamp_positions
 
 follow_pointer = False
 
-blue_species = Species(num_boids=100, color=BLUE)
-red_species = Species(num_boids=100, color=RED)
+blue_species = Species(num_boids=20, color=BLUE)
+red_species = Species(num_boids=60, color=RED)
+green_species = Species(num_boids=100, color=GREEN)
 
 
 class Simulation:
     """Handle the global behavior of boids for each step"""
 
-    def __init__(self, screen, num_boids):
+    def __init__(self, screen):
         self.screen = screen
-        self.num_boids = num_boids
+        self.num_boids = Species.total_boids
         self.boids = []
+        Boid.init_boid_positions()
 
     def start(self):
         """Instantiate new boids randomly"""

@@ -3,7 +3,7 @@ import pygame
 import itertools
 
 from utilities import rotation_2d, get_distance
-from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS, NUM_BOIDS
+from constants import SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, RADIUS
 from species import Species
 
 SCREEN_DIMENSIONS = np.array([[WINDOW_WIDTH], [WINDOW_HEIGHT]])
@@ -13,8 +13,13 @@ class Boid:
     """Represent and define boid behavior"""
 
     boid_count = itertools.count()
-    boid_positions = np.zeros((NUM_BOIDS, 2, 1))
-    boid_velocities = np.zeros((NUM_BOIDS, 2, 1))
+
+    @classmethod
+    def init_boid_positions(cls):
+        """Instantitate matrices used for storing boid positions.
+        Should be called after declaration of species to avoid empty array"""
+        cls.boid_positions = np.zeros((Species.total_boids, 2, 1))
+        cls.boid_velocities = np.zeros((Species.total_boids, 2, 1))
 
     def __init__(self, x, y, angle):
         self._id = next(self.boid_count)
