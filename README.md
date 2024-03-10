@@ -11,7 +11,13 @@ This algorithm relies on 3 rules that define the behavior of each boid :
 
 ## Running the simulation
 To start using this repo, install pygame and numpy.
+```bash
+pip install requirements.txt
+```
 The simulation can then be started by running main.py with python.
+```python
+python3 main.py
+```
 
 ## About this repo
 This implementation of boids runs using pygame, a python library for game develoment.
