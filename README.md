@@ -10,13 +10,13 @@ This algorithm relies on 3 rules that define the behavior of each boid :
 - separation : boids stay away from each other to avoid collision
 
 ## Running the simulation
-To start using this repo, install pygame and numpy.
+To start using this repo, install the required packages using uv.
 ```bash
-pip install requirements.txt
+uv sync
 ```
 The simulation can then be started by running main.py with python.
-```python
-python3 main.py
+```bash
+uv run main.py
 ```
 
 ## About this repo

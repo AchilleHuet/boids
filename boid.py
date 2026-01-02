@@ -81,7 +81,7 @@ class Boid:
     def draw(self, screen):
         """Draw the boid on the given screen"""
         # rotate and translate points to their correct coordinates
-        rotated = rotation_2d(self.angle) @ self.shape + self.pos
+        rotated = rotation_2d(self.angle[0]) @ self.shape + self.pos
 
         # extract (x, y) coordinates and draw shape
         new_points = [(*point[0], *point[1]) for point in rotated.tolist()]
